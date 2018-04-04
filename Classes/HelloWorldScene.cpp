@@ -1,6 +1,6 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
-
+#include"Shell.h"
 USING_NS_CC;
 
 Scene* HelloWorld::createScene() {
@@ -56,9 +56,9 @@ bool HelloWorld::init() {
 	// add a label shows "Hello World"
 	// create and initialize a label
 
-	auto label = Label::createWithTTF("Use wasd to control.", "fonts/Marker Felt.ttf", 24);
+	auto label = Label::createWithTTF(TTFConfig("fonts/consola.ttf", 12), "DiedRadish");
 	if(label == nullptr) {
-		problemLoading("'fonts/Marker Felt.ttf'");
+		problemLoading("'fonts/consola.ttf'");
 	}
 	else {
 		// position the label on the center of the screen
@@ -77,7 +77,7 @@ bool HelloWorld::init() {
 	else {
 		// position the sprite on the center of the screen
 		sp->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-
+		sp->setZOrder(1);
 		// add the sprite as a child to this layer
 		this->addChild(sp, 0);
 	}
@@ -87,6 +87,10 @@ bool HelloWorld::init() {
 	key->onKeyPressed = CC_CALLBACK_2(HelloWorld::onPress, this);
 	key->onKeyReleased = CC_CALLBACK_2(HelloWorld::onRelease, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(key, this);
+
+	auto f = Shell::create();
+	f->setZOrder(0);
+	this->addChild(f);
 	return true;
 }
 
@@ -106,7 +110,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender) {
 
 void HelloWorld::onPress(EventKeyboard::KeyCode keyCode, Event * event) {
 	if(keyCode == EventKeyboard::KeyCode::KEY_W) {
-		auto mt = MoveTo::create(6, Vec2(sp->getPositionX(), 320));
+		auto mt = MoveTo::create(6, Vec2(sp->getPositionX()));
 		mt->setFlags(1);
 		sp->runAction(mt);
 	}
