@@ -1,5 +1,6 @@
 #include"CharacterScene.h"
 #include"Others.h"
+#include"Shell.h"
 #include<ui/CocosGUI.h>
 
 USING_NS_CC;

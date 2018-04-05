@@ -1,6 +1,7 @@
 #include"MainScene.h"
 #include"CharacterScene.h"
 #include"Others.h"
+#include"Shell.h"
 #include<ui/CocosGUI.h>
 
 USING_NS_CC;
@@ -10,6 +11,24 @@ bool MainScene::init() {
 		return false;
 	}
 	auto VisionSize = Director::getInstance()->getVisibleSize();
+	ShellOpened = false;
+
+	//Keyboard
+	auto key = EventListenerKeyboard::create();
+	key->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event) {
+		if(keyCode == EventKeyboard::KeyCode::KEY_DELETE) {
+			if(ShellOpened) {
+				this->removeChildByName("Shell");
+			}
+			else {
+				auto tShell = Shell::create();
+				tShell->setName("Shell");
+				this->addChild(tShell);
+			}
+			ShellOpened = !ShellOpened;
+		}
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(key, this);
 
 	//Background
 	auto Background = Sprite::create(DIR_IMAGES + "Background.png");

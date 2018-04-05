@@ -1,15 +1,16 @@
-//#pragma once
-//
-//#include<cocos2d.h>
-//
-//class Shell: public cocos2d::Layer {
-//public:
-//	static cocos2d::Layer* createLayer();
-//
-//	virtual bool init() override;
-//
-//	CREATE_FUNC(Shell);
-//
-//private:
-//	cocos2d::Label* label;
-//};
+#pragma once
+
+#include<cocos2d.h>
+#include<ui/CocosGUI.h>
+
+class Shell: public cocos2d::Layer {
+public:
+	virtual bool init() override;
+
+	CREATE_FUNC(Shell);
+
+private:
+	cocos2d::ui::TextField* CommandText;
+	cocos2d::Label* HistoryLabel;
+	void Input();
+};

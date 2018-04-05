@@ -7,4 +7,7 @@ public:
 	CREATE_FUNC(MainScene);
 
 	virtual bool init();
+
+private:
+	bool ShellOpened;
 };

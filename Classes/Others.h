@@ -12,3 +12,4 @@
 #define FONTS_MSYH_B DIR_FONTS + std::string("MsyhB.ttc")
 #define FONTS_MSYH_L DIR_FONTS + std::string("MsyhL.ttc")
 #define FONTS_ARIAL DIR_FONTS + std::string("Arial.ttf")
+#define FONTS_CONSOLA DIR_FONTS + std::string("Consola.ttf")
