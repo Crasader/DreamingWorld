@@ -1,7 +1,7 @@
 #include"MainScene.h"
 #include"CharacterScene.h"
 #include"Others.h"
-#include"Shell.h"
+#include"ShellLayer.h"
 #include<ui/CocosGUI.h>
 
 USING_NS_CC;
@@ -21,7 +21,7 @@ bool MainScene::init() {
 				this->removeChildByName("Shell");
 			}
 			else {
-				auto tShell = Shell::create();
+				auto tShell = ShellLayer::create();
 				tShell->setName("Shell");
 				this->addChild(tShell);
 			}

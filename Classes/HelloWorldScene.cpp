@@ -1,6 +1,6 @@
 //#include "HelloWorldScene.h"
 //#include "SimpleAudioEngine.h"
-//#include"Shell.h"
+//#include"ShellLayer.h"
 //USING_NS_CC;
 //
 //Scene* HelloWorld::createScene() {
@@ -88,7 +88,7 @@
 //	key->onKeyReleased = CC_CALLBACK_2(HelloWorld::onRelease, this);
 //	_eventDispatcher->addEventListenerWithSceneGraphPriority(key, this);
 //
-//	auto f = Shell::create();
+//	auto f = ShellLayer::create();
 //	f->setZOrder(0);
 //	this->addChild(f);
 //	return true;
