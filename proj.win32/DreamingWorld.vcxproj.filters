@@ -30,10 +30,10 @@
     <ClCompile Include="..\Classes\Game.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\ShellController.cpp">
+    <ClCompile Include="..\Classes\ConsoleManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\ShellLayer.cpp">
+    <ClCompile Include="..\Classes\ConsoleLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,10 +59,10 @@
     <ClInclude Include="..\Classes\Game.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\ShellController.h">
+    <ClInclude Include="..\Classes\ConsoleManager.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\ShellLayer.h">
+    <ClInclude Include="..\Classes\ConsoleLayer.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

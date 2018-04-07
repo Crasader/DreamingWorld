@@ -4,11 +4,13 @@
 #include<ui/CocosGUI.h>
 #include<string>
 
-class ShellLayer: public cocos2d::Layer {
+class ConsoleLayer: public cocos2d::Layer {
 public:
 	virtual bool init() override;
+	CREATE_FUNC(ConsoleLayer);
 
-	CREATE_FUNC(ShellLayer);
+public:
+	virtual void onKeyReleased(cocos2d::EventKeyboard::KeyCode key, cocos2d::Event* event) override;
 
 private:
 	cocos2d::ui::TextField* CommandText;

@@ -1,10 +1,10 @@
-#include"ShellLayer.h"
-#include"ShellController.h"
+#include"ConsoleLayer.h"
+#include"ConsoleManager.h"
 #include"Others.h"
 
 USING_NS_CC;
 
-bool ShellLayer::init() {
+bool ConsoleLayer::init() {
 	if(!Layer::init()) {
 		return false;
 	}
@@ -57,7 +57,7 @@ bool ShellLayer::init() {
 		[this](Ref* sender, ui::Widget::TouchEventType type) {
 			if(type == ui::Widget::TouchEventType::ENDED) {
 				if(CommandText->getString() != "") {
-					ShellController::Get()->Input(CommandText->getString());
+					ConsoleManager::Get()->Input(CommandText->getString());
 					CommandText->setString("");
 					CommandTextScroll->setInnerContainerSize(CommandText->getContentSize());
 					CommandText->setPosition(Vec2(0, 0));
@@ -89,15 +89,30 @@ bool ShellLayer::init() {
 	HistoryLabelScroll->addChild(HistoryLabel);
 	this->addChild(HistoryLabelScroll);
 
-	//ShellController
-	ShellController::Get()->Move(
+	//ConsoleManager
+	ConsoleManager::Get()->Move(
 		[&](std::string text) {
 			this->HistoryLabel->setString(text);
 			HistoryLabelScroll->setInnerContainerSize(HistoryLabel->getContentSize());
 			HistoryLabel->setPosition(Vec2(0, HistoryLabel->getContentSize().height));
 			HistoryLabelScroll->setInnerContainerPosition(Vec2(0, 0));
+		},
+		[&]()->std::string {
+			return "";
 		}
-	);
+		);
 
 	return true;
+}
+
+void ConsoleLayer::onKeyReleased(EventKeyboard::KeyCode key, Event * event) {
+	if(key == EventKeyboard::KeyCode::KEY_ENTER) {
+		if(CommandText->getString() != "") {
+			ConsoleManager::Get()->Input(CommandText->getString());
+			CommandText->setString("");
+			CommandTextScroll->setInnerContainerSize(CommandText->getContentSize());
+			CommandText->setPosition(Vec2(0, 0));
+			CommandTextScroll->setInnerContainerPosition(Vec2(CommandTextScroll->getContentSize().width - CommandTextScroll->getInnerContainerSize().width, 0));
+		}
+	}
 }
