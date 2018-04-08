@@ -10,58 +10,67 @@ bool ConsoleLayer::init() {
 	}
 	auto VisibleSize = Director::getInstance()->getVisibleSize();
 
-	//TextField
-	CommandText = ui::TextField::create("Type command lines here.", FONTS_CONSOLA, 24);
-	CommandText->setAnchorPoint(Vec2(0, 0));
-	CommandText->setPosition(Vec2(0, 0));
-	CommandText->setContentSize(Size(VisibleSize.width - 50, 30));
-	CommandText->addEventListener(
+	//Background
+	auto InputBackground = LayerColor::create(Color4B(32, 32, 32, 200), VisibleSize.width, 24);
+	InputBackground->setZOrder(1);
+	this->addChild(InputBackground);
+	auto OutputBackground = LayerColor::create(Color4B(64, 64, 64, 200), VisibleSize.width, 240);
+	OutputBackground->setZOrder(1);
+	OutputBackground->setPosition(0, 24);
+	this->addChild(OutputBackground);
+
+	//InputTextField
+	InputTextField = ui::TextField::create("Type commands here.", FONTS_CONSOLA, 20);
+	InputTextField->setAnchorPoint(Vec2(0, 0));
+	InputTextField->addEventListener(
 		[&](Ref* ref, ui::TextField::EventType type) {
 			if(type == ui::TextField::EventType::INSERT_TEXT) {
-				CommandTextScroll->setInnerContainerSize(CommandText->getContentSize());
-				CommandText->setPosition(Vec2(0, 0));
-				CommandTextScroll->setInnerContainerPosition(Vec2(CommandTextScroll->getContentSize().width - CommandTextScroll->getInnerContainerSize().width, 0));
+				Reset();
 			}
 		}
 	);
 
-	//CommandTextScrollView
-	CommandTextScroll = ui::ScrollView::create();
-	CommandTextScroll->setZOrder(2);
-	CommandTextScroll->setPosition(Vec2(0, 0));
-	CommandTextScroll->setContentSize(Size(VisibleSize.width - 50, 30));
-	CommandTextScroll->setInnerContainerSize(CommandText->getContentSize());
-	CommandTextScroll->setDirection(ui::ScrollView::Direction::HORIZONTAL);
-	CommandTextScroll->setScrollBarEnabled(false);
-	CommandTextScroll->addChild(CommandText);
-	this->addChild(CommandTextScroll);
+	//InputScrollView
+	InputScrollView = ui::ScrollView::create();
+	InputScrollView->setZOrder(2);
+	InputScrollView->setDirection(ui::ScrollView::Direction::HORIZONTAL);
+	InputScrollView->setScrollBarEnabled(false);
+	InputScrollView->setPosition(Vec2(0, 0));
+	InputScrollView->setContentSize(Size(VisibleSize.width - 48, 24));
+	InputScrollView->addChild(InputTextField);
+	this->addChild(InputScrollView);
 
-	//Background
-	auto LowBackground = LayerColor::create(Color4B(32, 32, 32, 200), VisibleSize.width, 30);
-	LowBackground->setZOrder(1);
-	this->addChild(LowBackground);
-	auto HighBackground = LayerColor::create(Color4B(64, 64, 64, 200), VisibleSize.width, 200);
-	HighBackground->setZOrder(1);
-	HighBackground->setAnchorPoint(Vec2(0, 0));
-	HighBackground->setPosition(0, 30);
-	this->addChild(HighBackground);
+	//OutputLabel
+	OutputLabel = Label::createWithTTF("", FONTS_CONSOLA, 20);
+	OutputLabel->setAnchorPoint(Vec2(0, 0));
+	//OutputLabel->setPosition(Vec2(0, 0));
+	//OutputLabel->setContentSize(Size(VisibleSize.width, 0));
+	OutputLabel->setColor(Color3B(255, 255, 255));
+
+	//OutputScrollView
+	OutputScrollView = ui::ScrollView::create();
+	OutputScrollView->setZOrder(2);
+	OutputScrollView->setDirection(ui::ScrollView::Direction::BOTH);
+	OutputScrollView->setScrollBarEnabled(true);
+	OutputScrollView->setPosition(Vec2(0, 24));
+	OutputScrollView->setContentSize(Size(VisibleSize.width, 240));
+	OutputScrollView->addChild(OutputLabel);
+	this->addChild(OutputScrollView);
 
 	//EnterButton
 	auto EnterButton = ui::Button::create(DIR_IMAGES + "Button_Normal.png", DIR_IMAGES + "Button_Press.png", DIR_IMAGES + "Button_Disable.png");
 	EnterButton->setZOrder(2);
 	EnterButton->setAnchorPoint(Vec2(0, 0));
-	EnterButton->setPosition(Vec2(VisibleSize.width - 50, 0));
+	EnterButton->setPosition(Vec2(VisibleSize.width - 48, 0));
 	EnterButton->setScale9Enabled(true);
-	EnterButton->setSize(Size(50, 30));
+	EnterButton->setSize(Size(48, 24));
 	EnterButton->addTouchEventListener(
 		[this](Ref* sender, ui::Widget::TouchEventType type) {
 			if(type == ui::Widget::TouchEventType::ENDED) {
-				if(CommandText->getString() != "") {
-					ConsoleManager::Get()->Input(CommandText->getString());
-					CommandText->setString("");
-					CommandTextScroll->setInnerContainerSize(CommandText->getContentSize());
-					CommandText->setPosition(Vec2(0, 0));
-					CommandTextScroll->setInnerContainerPosition(Vec2(CommandTextScroll->getContentSize().width - CommandTextScroll->getInnerContainerSize().width, 0));
+				if(InputTextField->getString() != "") {
+					ConsoleManager::Get()->Input(InputTextField->getString());
+					InputTextField->setString("");
+					Reset();
 				}
 			}
 		}
@@ -71,48 +80,23 @@ bool ConsoleLayer::init() {
 	EnterButton->setTitleLabel(EnterButtonLabel);
 	this->addChild(EnterButton);
 
-	//HistoryLabel
-	HistoryLabel = Label::createWithTTF("", FONTS_CONSOLA, 24);
-	HistoryLabel->setAnchorPoint(Vec2(0, 1));
-	HistoryLabel->setPosition(Vec2(0, 0));
-	HistoryLabel->setContentSize(Size(VisibleSize.width, 0));
-	HistoryLabel->setColor(Color3B(255, 255, 255));
-
-	//HistoryLabelScrollView
-	HistoryLabelScroll = ui::ScrollView::create();
-	HistoryLabelScroll->setZOrder(2);
-	HistoryLabelScroll->setPosition(Vec2(0, 30));
-	HistoryLabelScroll->setContentSize(Size(VisibleSize.width, 200));
-	HistoryLabelScroll->setInnerContainerSize(HistoryLabel->getContentSize());
-	HistoryLabelScroll->setDirection(ui::ScrollView::Direction::BOTH);
-	HistoryLabelScroll->setScrollBarEnabled(true);
-	HistoryLabelScroll->addChild(HistoryLabel);
-	this->addChild(HistoryLabelScroll);
-
 	//ConsoleManager
 	ConsoleManager::Get()->Move(
 		[&](std::string text) {
-			this->HistoryLabel->setString(text);
-			HistoryLabelScroll->setInnerContainerSize(HistoryLabel->getContentSize());
-			HistoryLabel->setPosition(Vec2(0, HistoryLabel->getContentSize().height));
-			HistoryLabelScroll->setInnerContainerPosition(Vec2(0, 0));
+			this->OutputLabel->setString(text);
+			Reset();
 		},
 		[&]()->std::string {
 			return "";
 		}
 		);
-
+	Reset();
 	return true;
 }
 
-void ConsoleLayer::onKeyReleased(EventKeyboard::KeyCode key, Event * event) {
-	if(key == EventKeyboard::KeyCode::KEY_ENTER) {
-		if(CommandText->getString() != "") {
-			ConsoleManager::Get()->Input(CommandText->getString());
-			CommandText->setString("");
-			CommandTextScroll->setInnerContainerSize(CommandText->getContentSize());
-			CommandText->setPosition(Vec2(0, 0));
-			CommandTextScroll->setInnerContainerPosition(Vec2(CommandTextScroll->getContentSize().width - CommandTextScroll->getInnerContainerSize().width, 0));
-		}
-	}
+void ConsoleLayer::Reset() {
+	InputScrollView->setInnerContainerSize(InputTextField->getContentSize());
+	OutputScrollView->setInnerContainerSize(OutputLabel->getContentSize());
+	InputScrollView->setInnerContainerPosition(Vec2(InputScrollView->getContentSize().width - InputScrollView->getInnerContainerSize().width, 0));
+	OutputScrollView->setInnerContainerPosition(Vec2(0, 0));
 }

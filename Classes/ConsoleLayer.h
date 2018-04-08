@@ -9,12 +9,11 @@ public:
 	virtual bool init() override;
 	CREATE_FUNC(ConsoleLayer);
 
-public:
-	virtual void onKeyReleased(cocos2d::EventKeyboard::KeyCode key, cocos2d::Event* event) override;
-
 private:
-	cocos2d::ui::TextField* CommandText;
-	cocos2d::Label* HistoryLabel;
-	cocos2d::ui::ScrollView* HistoryLabelScroll;
-	cocos2d::ui::ScrollView* CommandTextScroll;
+	cocos2d::ui::TextField* InputTextField;
+	cocos2d::Label* OutputLabel;
+	cocos2d::ui::ScrollView* OutputScrollView;
+	cocos2d::ui::ScrollView* InputScrollView;
+
+	void Reset();
 };

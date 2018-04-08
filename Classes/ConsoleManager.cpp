@@ -18,63 +18,81 @@ void ConsoleManager::Move(std::function<void(std::string)> OCB, std::function<st
 }
 
 void ConsoleManager::Input(std::string Cmd) {
+	CmdInput.push_back(Cmd);
+
 	Print("");
-	std::vector<std::string> Args;
-	std::string Arg;
-	for(std::size_t i = 0; i < Cmd.size(); i++) {
-		Arg = "";
-		if(Cmd[i] == ' ') {
-			while(i < Cmd.size() && Cmd[i] == ' ') {
-				i++;
-			}
-			i--;
-			continue;
+
+	char tL, nL;
+	std::size_t i = 0;
+
+	auto Set = [&]() {
+		tL = Cmd[i];
+		nL = (i + 1) < Cmd.size() ? Cmd[i + 1] : ' ';
+	};
+	auto Next = [&]()->bool {
+		i++;
+		if(i >= Cmd.size()) {
+			return false;
 		}
-		if(Cmd[i] == '/') {
-			while(i < Cmd.size() && Cmd[i] != ' ') {
-				Arg += Cmd[i];
-				i++;
+		Set();
+		return true;
+	};
+
+	Set();
+	std::vector<std::string> Args;
+	for(; i < Cmd.size(); Next()) {
+		std::string Arg;
+		if(tL == ' ') {
+			while(nL == ' ' && Next()) {
+			}
+		}
+		else if(tL == '/') {
+			Arg += tL;
+			while(nL != ' ' && Next()) {
+				Arg += tL;
 			}
 			Args.push_back(Arg);
-			continue;
 		}
-		if(Cmd[i] == '\"') {
-			i++;
-			for(; i < Cmd.size(); i++) {
-				if(Cmd[i] == '\"' && (i + 1) < Cmd.size() && Cmd[i + 1] == '\"') {
+		else if(tL == '\"') {
+			while(Next()) {
+				if(tL == '\"' && nL == '\"') {
 					Arg += '\"';
-					i++;
+					Next();
 				}
-				else if(Cmd[i] == '\"') {
+				else if(tL == '\"') {
 					break;
 				}
 				else {
-					Arg += Cmd[i];
+					Arg += tL;
 				}
 			}
 			Args.push_back(Arg);
-			continue;
 		}
-		if(Cmd[i] != '\"'&&Cmd[i] != ' '&&Cmd[i] != '/') {
-			while(i < Cmd.size() && Cmd[i] != ' ') {
-				Arg += Cmd[i];
-				i++;
+		else {
+			Arg += tL;
+			while(nL != ' ' && Next()) {
+				Arg += tL;
 			}
 			Args.push_back(Arg);
-			continue;
 		}
-		throw std::runtime_error("Input Error.");
 	}
 
-	//std::string tt;
-	//for(auto t : Args) {
-	//	tt += t;
-	//	tt += " ";
-	//}
-	//Print(tt);
-	//if(Args.size() >= 1 && Args[0] == "/version") {
-	//	Print("DreamingWorld Version: 1.0");
-	//}
+	for(auto &t : Args) {
+		Print(t);
+	}
+	if(Args.size() > 0) {
+		if(Args[0] == "/history") {
+			for(auto &t : CmdInput) {
+				Print(t);
+			}
+		}
+		if(Args[0] == "/version") {
+			Print("1.0.0");
+		}
+		if(Args[0] == "/author") {
+			Print("DiedRadish & SherryGuantou");
+		}
+	}
 }
 
 void ConsoleManager::Print(std::string Msg) {
