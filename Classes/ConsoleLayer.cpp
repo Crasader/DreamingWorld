@@ -37,6 +37,7 @@ bool ConsoleLayer::init() {
 	InputScrollView->setScrollBarEnabled(false);
 	InputScrollView->setPosition(Vec2(0, 0));
 	InputScrollView->setContentSize(Size(VisibleSize.width - 48, 24));
+	InputScrollView->getInnerContainer()->setAnchorPoint(Vec2(1, 0));
 	InputScrollView->addChild(InputTextField);
 	this->addChild(InputScrollView);
 
@@ -95,8 +96,31 @@ bool ConsoleLayer::init() {
 }
 
 void ConsoleLayer::Reset() {
-	InputScrollView->setInnerContainerSize(InputTextField->getContentSize());
-	OutputScrollView->setInnerContainerSize(OutputLabel->getContentSize());
-	InputScrollView->setInnerContainerPosition(Vec2(InputScrollView->getContentSize().width - InputScrollView->getInnerContainerSize().width, 0));
-	OutputScrollView->setInnerContainerPosition(Vec2(0, 0));
+	//Set the InputTextField pos and size.
+	auto Size = InputTextField->getContentSize();
+	auto DefSize = InputScrollView->getContentSize();
+	if(Size.width < DefSize.width) {
+		Size.width = DefSize.width;
+	}
+	if(Size.height < DefSize.height) {
+		Size.height = DefSize.height;
+	}
+	InputScrollView->setInnerContainerSize(Size);
+	if(InputScrollView->getInnerContainerPosition() != Vec2(DefSize.width, 0)) {
+		InputScrollView->setInnerContainerPosition(Vec2(DefSize.width, 0));
+	}
+
+	//Set the OutputLabel pos and size.
+	Size = OutputLabel->getContentSize();
+	DefSize = OutputScrollView->getContentSize();
+	if(Size.width < DefSize.width) {
+		Size.width = DefSize.width;
+	}
+	if(Size.height < DefSize.height) {
+		Size.height = DefSize.height;
+	}
+	OutputScrollView->setInnerContainerSize(Size);
+	if(OutputScrollView->getInnerContainerPosition() != Vec2(0, 0)) {
+		OutputScrollView->setInnerContainerPosition(Vec2(0, 0));
+	}
 }

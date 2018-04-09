@@ -2,7 +2,10 @@
 
 #include<string>
 #include<vector>
+#include<map>
 #include<functional>
+
+class ConsoleLayer;
 
 class ConsoleManager {
 private:
@@ -24,4 +27,9 @@ private:
 public:
 	void Input(std::string Cmd);
 	void Print(std::string Msg);
+
+private:
+	std::map<std::string, std::function<bool(std::vector<std::string>)>> Commands;
+public:
+	bool AddCommand(std::string tCommandName, std::function<bool(std::vector<std::string>)> tCommandCallback);
 };

@@ -1,12 +1,32 @@
 #include"ConsoleManager.h"
-
-#include<exception>
+#include"ConsoleLayer.h"
+#include"Others.h"
 
 ConsoleManager::ConsoleManager() {
 	CmdOutput = "DreamingWorld Console.";
+	AddCommand("/history",
+			   [&](std::vector<std::string>)->bool {
+				   for(auto &t : CmdInput) {
+					   Print(t);
+				   }
+				   return true;
+			   }
+	);
+	AddCommand("/author",
+			   [&](std::vector<std::string>)->bool {
+				   Print(AUTHOR);
+				   return true;
+			   }
+	);
+	AddCommand("/version",
+			   [&](std::vector<std::string>)->bool {
+				   Print(VERSION);
+				   return true;
+			   }
+	);
 }
 
-ConsoleManager * ConsoleManager::Get() {
+ConsoleManager* ConsoleManager::Get() {
 	static ConsoleManager t;
 	return &t;
 }
@@ -80,18 +100,19 @@ void ConsoleManager::Input(std::string Cmd) {
 	for(auto &t : Args) {
 		Print(t);
 	}
+
 	if(Args.size() > 0) {
-		if(Args[0] == "/history") {
-			for(auto &t : CmdInput) {
-				Print(t);
+		if(Commands.find(Args[0]) != Commands.end()) {
+			if(!Commands[Args[0]](std::vector<std::string>(Args.begin() + 1, Args.end()))) {
+				Print("Error: Command.");
 			}
 		}
-		if(Args[0] == "/version") {
-			Print("1.0.0");
+		else {
+			Print("Error: Command name.");
 		}
-		if(Args[0] == "/author") {
-			Print("DiedRadish & SherryGuantou");
-		}
+	}
+	else {
+		Print("Error: Arg size.");
 	}
 }
 
@@ -99,4 +120,13 @@ void ConsoleManager::Print(std::string Msg) {
 	CmdOutput += '\n';
 	CmdOutput += Msg;
 	OutputCallback(CmdOutput);
+}
+
+bool ConsoleManager::AddCommand(std::string tCommandName, std::function<bool(std::vector<std::string>)> tCommandCallback) {
+	if(Commands.find(tCommandName) != Commands.end()) {
+		return false;
+	}
+	//TODO: add the arg counts.
+	Commands[tCommandName] = tCommandCallback;
+	return true;
 }

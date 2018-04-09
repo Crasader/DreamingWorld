@@ -2,6 +2,7 @@
 #include"CharacterScene.h"
 #include"Others.h"
 #include"ConsoleLayer.h"
+#include"ConsoleManager.h"
 #include<ui/CocosGUI.h>
 
 USING_NS_CC;
@@ -70,5 +71,11 @@ bool MainScene::init() {
 	BagButton->setTitleLabel(BagButtonLabel);
 	this->addChild(BagButton);
 
+	ConsoleManager::Get()->AddCommand("/help",
+									  [&](std::vector<std::string >t)->bool {
+										  int i = std::stoi(t[0]);
+										  ConsoleManager::Get()->Print("Page: " + t[0]);
+										  return true;
+									  });
 	return true;
 }

@@ -14,4 +14,5 @@
 #define FONTS_ARIAL DIR_FONTS + std::string("Arial.ttf")
 #define FONTS_CONSOLA DIR_FONTS + std::string("Consola.ttf")
 
-#define T(text) 
+#define VERSION "1.0.0"
+#define AUTHOR "SherryGuantou & DiedRadish"
