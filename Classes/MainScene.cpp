@@ -39,6 +39,7 @@ bool MainScene::init() {
 
 	//CharacterButton
 	auto CharacterButton = ui::Button::create(DIR_IMAGES + "Button_Normal.png", DIR_IMAGES + "Button_Press.png", DIR_IMAGES + "Button_Disable.png");
+	CharacterButton->setName("Char");
 	CharacterButton->setPosition(Vec2(664, 62));
 	CharacterButton->setScale9Enabled(true);
 	CharacterButton->setContentSize(Size(80, 80));
@@ -58,6 +59,7 @@ bool MainScene::init() {
 
 	//BagButton
 	auto BagButton = ui::Button::create(DIR_IMAGES + "Button_Normal.png", DIR_IMAGES + "Button_Press.png", DIR_IMAGES + "Button_Disable.png");
+	BagButton->setName("Bag");
 	BagButton->setPosition(Vec2(746, 62));
 	BagButton->setScale9Enabled(true);
 	BagButton->setContentSize(Size(80, 80));
@@ -71,11 +73,17 @@ bool MainScene::init() {
 	BagButton->setTitleLabel(BagButtonLabel);
 	this->addChild(BagButton);
 
-	ConsoleManager::Get()->AddCommand("/help",
+	ConsoleManager::Get()->AddCommand("/help", 1,
 									  [&](std::vector<std::string >t)->bool {
-										  int i = std::stoi(t[0]);
+										  //int i = std::stoi(t[0]);
 										  ConsoleManager::Get()->Print("Page: " + t[0]);
 										  return true;
 									  });
+	ConsoleManager::Get()->AddCommand("/setpos", 3,
+									  [&](std::vector<std::string> t)->bool {
+										  this->getChildByName(t[0])->setPosition(Vec2(std::stof(t[1]), std::stof(t[2])));
+										  return true;
+									  }
+	);
 	return true;
 }

@@ -4,7 +4,7 @@
 
 ConsoleManager::ConsoleManager() {
 	CmdOutput = "DreamingWorld Console.";
-	AddCommand("/history",
+	AddCommand("/history", 0,
 			   [&](std::vector<std::string>)->bool {
 				   for(auto &t : CmdInput) {
 					   Print(t);
@@ -12,13 +12,13 @@ ConsoleManager::ConsoleManager() {
 				   return true;
 			   }
 	);
-	AddCommand("/author",
+	AddCommand("/author", 0,
 			   [&](std::vector<std::string>)->bool {
 				   Print(AUTHOR);
 				   return true;
 			   }
 	);
-	AddCommand("/version",
+	AddCommand("/version", 0,
 			   [&](std::vector<std::string>)->bool {
 				   Print(VERSION);
 				   return true;
@@ -102,8 +102,9 @@ void ConsoleManager::Input(std::string Cmd) {
 	}
 
 	if(Args.size() > 0) {
-		if(Commands.find(Args[0]) != Commands.end()) {
-			if(!Commands[Args[0]](std::vector<std::string>(Args.begin() + 1, Args.end()))) {
+		if((Commands.find(Args[0])) != Commands.end()) {
+			Args.resize(Commands[Args[0]].ArgCount + 1);
+			if(!Commands[Args[0]].Callback(std::vector<std::string>(Args.begin() + 1, Args.end()))) {
 				Print("Error: Command.");
 			}
 		}
@@ -122,11 +123,11 @@ void ConsoleManager::Print(std::string Msg) {
 	OutputCallback(CmdOutput);
 }
 
-bool ConsoleManager::AddCommand(std::string tCommandName, std::function<bool(std::vector<std::string>)> tCommandCallback) {
+bool ConsoleManager::AddCommand(std::string tCommandName, std::size_t tArgCount, std::function<bool(std::vector<std::string>)> tCommandCallback) {
 	if(Commands.find(tCommandName) != Commands.end()) {
 		return false;
 	}
 	//TODO: add the arg counts.
-	Commands[tCommandName] = tCommandCallback;
+	Commands[tCommandName] = Command({tCommandCallback, tArgCount});
 	return true;
 }

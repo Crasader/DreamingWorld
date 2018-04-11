@@ -29,7 +29,12 @@ public:
 	void Print(std::string Msg);
 
 private:
-	std::map<std::string, std::function<bool(std::vector<std::string>)>> Commands;
+	struct Command {
+		std::function<bool(std::vector<std::string>)> Callback;
+		std::size_t ArgCount;
+	};
+	std::map<std::string, Command> Commands;
 public:
-	bool AddCommand(std::string tCommandName, std::function<bool(std::vector<std::string>)> tCommandCallback);
+	bool AddCommand(std::string tCommandName, std::size_t tArgCount,
+					std::function<bool(std::vector<std::string>)> tCommandCallback);
 };
