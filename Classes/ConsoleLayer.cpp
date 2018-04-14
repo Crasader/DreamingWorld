@@ -44,8 +44,6 @@ bool ConsoleLayer::init() {
 	//OutputLabel
 	OutputLabel = Label::createWithTTF("", FONTS_CONSOLA, 20);
 	OutputLabel->setAnchorPoint(Vec2(0, 0));
-	//OutputLabel->setPosition(Vec2(0, 0));
-	//OutputLabel->setContentSize(Size(VisibleSize.width, 0));
 	OutputLabel->setColor(Color3B(255, 255, 255));
 
 	//OutputScrollView
@@ -82,17 +80,19 @@ bool ConsoleLayer::init() {
 	this->addChild(EnterButton);
 
 	//ConsoleManager
-	ConsoleManager::Get()->Move(
-		[&](std::string text) {
-			this->OutputLabel->setString(text);
-			Reset();
-		},
-		[&]()->std::string {
-			return "";
-		}
-		);
+	ConsoleManager::Get()->
+		AddConsole(this,
+				   [&]() {
+					   this->OutputLabel->setString(*ConsoleManager::Get()->GetOutput());
+					   Reset();
+				   }
+	);
 	Reset();
 	return true;
+}
+
+ConsoleLayer::~ConsoleLayer() {
+	ConsoleManager::Get()->RemoveConsole(this);
 }
 
 void ConsoleLayer::Reset() {
@@ -106,9 +106,7 @@ void ConsoleLayer::Reset() {
 		Size.height = DefSize.height;
 	}
 	InputScrollView->setInnerContainerSize(Size);
-	if(InputScrollView->getInnerContainerPosition() != Vec2(DefSize.width, 0)) {
-		InputScrollView->setInnerContainerPosition(Vec2(DefSize.width, 0));
-	}
+	InputScrollView->setInnerContainerPosition(Vec2(DefSize.width, 0));
 
 	//Set the OutputLabel pos and size.
 	Size = OutputLabel->getContentSize();
@@ -120,7 +118,5 @@ void ConsoleLayer::Reset() {
 		Size.height = DefSize.height;
 	}
 	OutputScrollView->setInnerContainerSize(Size);
-	if(OutputScrollView->getInnerContainerPosition() != Vec2(0, 0)) {
-		OutputScrollView->setInnerContainerPosition(Vec2(0, 0));
-	}
+	OutputScrollView->setInnerContainerPosition(Vec2(0, 0));
 }

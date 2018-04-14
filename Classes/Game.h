@@ -2,7 +2,7 @@
 
 class Game {
 private:
-	Game() = default;
+	Game();
 public:
 	~Game() = default;
 	static Game* Get();

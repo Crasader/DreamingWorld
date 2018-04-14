@@ -3,27 +3,7 @@
 #include"Others.h"
 
 ConsoleManager::ConsoleManager() {
-	CmdOutput = "DreamingWorld Console.";
-	AddCommand("/history", 0,
-			   [&](std::vector<std::string>)->bool {
-				   for(auto &t : CmdInput) {
-					   Print(t);
-				   }
-				   return true;
-			   }
-	);
-	AddCommand("/author", 0,
-			   [&](std::vector<std::string>)->bool {
-				   Print(AUTHOR);
-				   return true;
-			   }
-	);
-	AddCommand("/version", 0,
-			   [&](std::vector<std::string>)->bool {
-				   Print(VERSION);
-				   return true;
-			   }
-	);
+	CmdOutput = "DreamingWorld Console";
 }
 
 ConsoleManager* ConsoleManager::Get() {
@@ -31,10 +11,35 @@ ConsoleManager* ConsoleManager::Get() {
 	return &t;
 }
 
-void ConsoleManager::Move(std::function<void(std::string)> OCB, std::function<std::string()> SCB) {
-	OutputCallback = OCB;
-	ScanCallback = SCB;
-	OutputCallback(CmdOutput);
+bool ConsoleManager::AddConsole(ConsoleLayer* tConsoleLayer, std::function<void()> tOutputCallback) {
+	if(std::find_if(Consoles.begin(), Consoles.end(), [tConsoleLayer](Console& t)->bool {return t.pConsole == tConsoleLayer; }) != Consoles.end()) {
+		return false;
+	}
+	Consoles.push_back({tConsoleLayer, tOutputCallback});
+	for(auto &t : Consoles) {
+		t.OutputCallback();
+	}
+	return true;
+}
+
+bool ConsoleManager::RemoveConsole(ConsoleLayer * tConsoleLayer) {
+	std::vector<Console>::iterator i;
+	if((i = std::find_if(Consoles.begin(), Consoles.end(), [tConsoleLayer](Console& t)->bool {return t.pConsole == tConsoleLayer; })) == Consoles.end()) {
+		return false;
+	}
+	Consoles.erase(i);
+	for(auto &t : Consoles) {
+		t.OutputCallback();
+	}
+	return true;
+}
+
+const std::vector<std::string>* ConsoleManager::GetInput() {
+	return &CmdInput;
+}
+
+const std::string * ConsoleManager::GetOutput() {
+	return &CmdOutput;
 }
 
 void ConsoleManager::Input(std::string Cmd) {
@@ -62,6 +67,7 @@ void ConsoleManager::Input(std::string Cmd) {
 	std::vector<std::string> Args;
 	for(; i < Cmd.size(); Next()) {
 		std::string Arg;
+		Arg.reserve(Args.size());
 		if(tL == ' ') {
 			while(nL == ' ' && Next()) {
 			}
@@ -97,9 +103,9 @@ void ConsoleManager::Input(std::string Cmd) {
 		}
 	}
 
-	for(auto &t : Args) {
-		Print(t);
-	}
+	//for(auto &t : Args) {
+	//	Print(t);
+	//}
 
 	if(Args.size() > 0) {
 		if((Commands.find(Args[0])) != Commands.end()) {
@@ -120,14 +126,23 @@ void ConsoleManager::Input(std::string Cmd) {
 void ConsoleManager::Print(std::string Msg) {
 	CmdOutput += '\n';
 	CmdOutput += Msg;
-	OutputCallback(CmdOutput);
+	for(auto &t : Consoles) {
+		t.OutputCallback();
+	}
 }
 
 bool ConsoleManager::AddCommand(std::string tCommandName, std::size_t tArgCount, std::function<bool(std::vector<std::string>)> tCommandCallback) {
 	if(Commands.find(tCommandName) != Commands.end()) {
 		return false;
 	}
-	//TODO: add the arg counts.
 	Commands[tCommandName] = Command({tCommandCallback, tArgCount});
+	return true;
+}
+
+bool ConsoleManager::RemoveCommand(std::string tCommandName) {
+	if(Commands.find(tCommandName) == Commands.end()) {
+		return false;
+	}
+	Commands.erase(tCommandName);
 	return true;
 }

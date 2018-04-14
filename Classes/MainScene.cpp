@@ -15,21 +15,7 @@ bool MainScene::init() {
 	ShellOpened = false;
 
 	//Keyboard
-	auto key = EventListenerKeyboard::create();
-	key->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event) {
-		if(keyCode == EventKeyboard::KeyCode::KEY_DELETE) {
-			if(ShellOpened) {
-				this->removeChildByName("Shell");
-			}
-			else {
-				auto tShell = ConsoleLayer::create();
-				tShell->setName("Shell");
-				this->addChild(tShell);
-			}
-			ShellOpened = !ShellOpened;
-		}
-	};
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(key, this);
+	CONSOLE_KEY;
 
 	//Background
 	auto Background = Sprite::create(DIR_IMAGES + "Background.png");

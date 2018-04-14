@@ -29,5 +29,8 @@ bool CharacterScene::init() {
 	BackButton->setTitleLabel(BackButtonLabel);
 	this->addChild(BackButton);
 
+	//Key
+	CONSOLE_KEY;
+
 	return true;
 }
