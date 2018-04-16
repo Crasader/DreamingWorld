@@ -50,7 +50,8 @@ public:
 #define CONSOLE_KEY_PRE private: \
 bool ShellOpened;
 
-#define CONSOLE_KEY auto key = EventListenerKeyboard::create(); \
+#define CONSOLE_KEY ShellOpened = false; \
+auto key = EventListenerKeyboard::create(); \
 key->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event) { \
 	if(keyCode == EventKeyboard::KeyCode::KEY_DELETE) { \
 		if(ShellOpened) { \

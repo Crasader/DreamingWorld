@@ -25,7 +25,7 @@ bool ConsoleLayer::init() {
 	InputTextField->addEventListener(
 		[&](Ref* ref, ui::TextField::EventType type) {
 			if(type == ui::TextField::EventType::INSERT_TEXT) {
-				Reset();
+				ResetInput();
 			}
 		}
 	);
@@ -36,7 +36,7 @@ bool ConsoleLayer::init() {
 	InputScrollView->setDirection(ui::ScrollView::Direction::HORIZONTAL);
 	InputScrollView->setScrollBarEnabled(false);
 	InputScrollView->setPosition(Vec2(0, 0));
-	InputScrollView->setContentSize(Size(VisibleSize.width - 48, 24));
+	InputScrollView->setContentSize(Size(VisibleSize.width, 24));
 	InputScrollView->getInnerContainer()->setAnchorPoint(Vec2(1, 0));
 	InputScrollView->addChild(InputTextField);
 	this->addChild(InputScrollView);
@@ -56,38 +56,32 @@ bool ConsoleLayer::init() {
 	OutputScrollView->addChild(OutputLabel);
 	this->addChild(OutputScrollView);
 
-	//EnterButton
-	auto EnterButton = ui::Button::create(DIR_IMAGES + "Button_Normal.png", DIR_IMAGES + "Button_Press.png", DIR_IMAGES + "Button_Disable.png");
-	EnterButton->setZOrder(2);
-	EnterButton->setAnchorPoint(Vec2(0, 0));
-	EnterButton->setPosition(Vec2(VisibleSize.width - 48, 0));
-	EnterButton->setScale9Enabled(true);
-	EnterButton->setSize(Size(48, 24));
-	EnterButton->addTouchEventListener(
-		[this](Ref* sender, ui::Widget::TouchEventType type) {
-			if(type == ui::Widget::TouchEventType::ENDED) {
-				if(InputTextField->getString() != "") {
-					ConsoleManager::Get()->Input(InputTextField->getString());
-					InputTextField->setString("");
-					Reset();
-				}
+	//KeyboardEvent
+	auto key = EventListenerKeyboard::create();
+	key->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event) {
+		if(keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
+			if(InputTextField->getString() != "") {
+				ConsoleManager::Get()->Input(InputTextField->getString());
+				InputTextField->setString("");
+				ResetInput();
+				ResetOutput();
 			}
 		}
-	);
-	auto EnterButtonLabel = Label::createWithTTF("OK", FONTS_KAI, 24);
-	EnterButtonLabel->setColor(Color3B(0, 0, 0));
-	EnterButton->setTitleLabel(EnterButtonLabel);
-	this->addChild(EnterButton);
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(key, this);
 
 	//ConsoleManager
 	ConsoleManager::Get()->
 		AddConsole(this,
 				   [&]() {
 					   this->OutputLabel->setString(*ConsoleManager::Get()->GetOutput());
-					   Reset();
+					   ResetInput();
+					   ResetOutput();
 				   }
 	);
-	Reset();
+	ResetInput();
+	ResetOutput();
+
 	return true;
 }
 
@@ -95,7 +89,7 @@ ConsoleLayer::~ConsoleLayer() {
 	ConsoleManager::Get()->RemoveConsole(this);
 }
 
-void ConsoleLayer::Reset() {
+void ConsoleLayer::ResetInput() {
 	//Set the InputTextField pos and size.
 	auto Size = InputTextField->getContentSize();
 	auto DefSize = InputScrollView->getContentSize();
@@ -107,8 +101,12 @@ void ConsoleLayer::Reset() {
 	}
 	InputScrollView->setInnerContainerSize(Size);
 	InputScrollView->setInnerContainerPosition(Vec2(DefSize.width, 0));
+}
 
+void ConsoleLayer::ResetOutput() {
 	//Set the OutputLabel pos and size.
+	auto Size = InputTextField->getContentSize();
+	auto DefSize = InputScrollView->getContentSize();
 	Size = OutputLabel->getContentSize();
 	DefSize = OutputScrollView->getContentSize();
 	if(Size.width < DefSize.width) {
@@ -117,6 +115,8 @@ void ConsoleLayer::Reset() {
 	if(Size.height < DefSize.height) {
 		Size.height = DefSize.height;
 	}
-	OutputScrollView->setInnerContainerSize(Size);
+	if(!Size.equals(OutputScrollView->getInnerContainerSize())) {
+		OutputScrollView->setInnerContainerSize(Size);
+	}
 	OutputScrollView->setInnerContainerPosition(Vec2(0, 0));
 }

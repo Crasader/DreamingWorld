@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
 #include"MainScene.h"
+#include"Game.h"
+#include"ConsoleManager.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -42,6 +43,11 @@ void AppDelegate::initGLContextAttrs() {
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+	//单例类在此先初始化一下
+	//防止出事
+	Game::Get();
+	ConsoleManager::Get();
+
 	// initialize director
 	auto director = Director::getInstance();
 	auto glview = director->getOpenGLView();

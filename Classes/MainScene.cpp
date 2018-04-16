@@ -12,7 +12,6 @@ bool MainScene::init() {
 		return false;
 	}
 	auto VisionSize = Director::getInstance()->getVisibleSize();
-	ShellOpened = false;
 
 	//Keyboard
 	CONSOLE_KEY;
@@ -59,17 +58,12 @@ bool MainScene::init() {
 	BagButton->setTitleLabel(BagButtonLabel);
 	this->addChild(BagButton);
 
-	ConsoleManager::Get()->AddCommand("/help", 1,
-									  [&](std::vector<std::string >t)->bool {
-										  //int i = std::stoi(t[0]);
-										  ConsoleManager::Get()->Print("Page: " + t[0]);
-										  return true;
-									  });
-	ConsoleManager::Get()->AddCommand("/setpos", 3,
-									  [&](std::vector<std::string> t)->bool {
-										  this->getChildByName(t[0])->setPosition(Vec2(std::stof(t[1]), std::stof(t[2])));
-										  return true;
-									  }
+	ConsoleManager::Get()->
+		AddCommand("/setpos", 3,
+				   [&](std::vector<std::string> t)->bool {
+					   this->getChildByName(t[0])->setPosition(Vec2(std::stof(t[1]), std::stof(t[2])));
+					   return true;
+				   }
 	);
 	return true;
 }

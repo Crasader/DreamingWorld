@@ -15,5 +15,7 @@ private:
 	cocos2d::Label* OutputLabel;
 	cocos2d::ui::ScrollView* OutputScrollView;
 	cocos2d::ui::ScrollView* InputScrollView;
-	void Reset();
+private:
+	void ResetInput();
+	void ResetOutput();
 };
