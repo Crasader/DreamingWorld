@@ -34,6 +34,7 @@ public:
 	bool AddCommand(std::string tCommandName, std::size_t tArgCount,
 					std::function<bool(std::vector<std::string>)> tCommandCallback);
 	bool RemoveCommand(std::string tCommandName);
+	std::string CommandHelp();
 
 private:
 	std::string CmdOutput;
@@ -60,6 +61,7 @@ key->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Ev
 		else { \
 			auto tShell = ConsoleLayer::create(); \
 			tShell->setName("Shell"); \
+tShell->setZOrder(256);\
 			this->addChild(tShell); \
 		} \
 		ShellOpened = !ShellOpened; \

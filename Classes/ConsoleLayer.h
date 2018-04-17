@@ -15,6 +15,7 @@ private:
 	cocos2d::Label* OutputLabel;
 	cocos2d::ui::ScrollView* OutputScrollView;
 	cocos2d::ui::ScrollView* InputScrollView;
+	std::size_t HisPos;
 private:
 	void ResetInput();
 	void ResetOutput();

@@ -22,6 +22,7 @@ bool ConsoleLayer::init() {
 	//InputTextField
 	InputTextField = ui::TextField::create("Type commands here.", FONTS_CONSOLA, 20);
 	InputTextField->setAnchorPoint(Vec2(0, 0));
+	InputTextField->setInsertText(true);
 	InputTextField->addEventListener(
 		[&](Ref* ref, ui::TextField::EventType type) {
 			if(type == ui::TextField::EventType::INSERT_TEXT) {
@@ -65,6 +66,42 @@ bool ConsoleLayer::init() {
 				InputTextField->setString("");
 				ResetInput();
 				ResetOutput();
+				HisPos = (*(ConsoleManager::Get()->GetInput())).size();
+			}
+		}
+		if(keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW) {
+			if(HisPos > 0) {
+				HisPos--;
+			}
+
+			if(HisPos < 0) {
+				HisPos = 0;
+			}
+			if(HisPos > (*(ConsoleManager::Get()->GetInput())).size()) {
+				HisPos = (*(ConsoleManager::Get()->GetInput())).size();
+			}
+
+			if(HisPos == (*(ConsoleManager::Get()->GetInput())).size()) {
+				InputTextField->setString("");
+			}
+			else {
+				InputTextField->setString((*(ConsoleManager::Get()->GetInput()))[HisPos]);
+			}
+		}
+		if(keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
+			HisPos++;
+			if(HisPos < 0) {
+				HisPos = 0;
+			}
+			if(HisPos > (*(ConsoleManager::Get()->GetInput())).size()) {
+				HisPos = (*(ConsoleManager::Get()->GetInput())).size();
+			}
+
+			if(HisPos == (*(ConsoleManager::Get()->GetInput())).size()) {
+				InputTextField->setString("");
+			}
+			else {
+				InputTextField->setString((*(ConsoleManager::Get()->GetInput()))[HisPos]);
 			}
 		}
 	};

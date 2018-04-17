@@ -4,6 +4,13 @@
 
 ConsoleManager::ConsoleManager() {
 	CmdOutput = "DreamingWorld Console";
+	//CmdInput.push_back("");
+	AddCommand("/help", 0,
+			   [&](std::vector<std::string>)->bool {
+				   Print(CommandHelp());
+				   return true;
+			   }
+	);
 }
 
 ConsoleManager* ConsoleManager::Get() {
@@ -103,10 +110,7 @@ void ConsoleManager::Input(std::string Cmd) {
 		}
 	}
 
-	//for(auto &t : Args) {
-	//	Print(t);
-	//}
-
+	Print(std::string("Command: ") + Cmd);
 	if(Args.size() > 0) {
 		if((Commands.find(Args[0])) != Commands.end()) {
 			Args.resize(Commands[Args[0]].ArgCount + 1);
@@ -145,4 +149,14 @@ bool ConsoleManager::RemoveCommand(std::string tCommandName) {
 	}
 	Commands.erase(tCommandName);
 	return true;
+}
+
+std::string ConsoleManager::CommandHelp() {
+	std::string t;
+	for(auto &c : Commands) {
+		t += c.first;
+		t += '\n';
+	}
+	t.erase(t.end() - 1);
+	return t;
 }

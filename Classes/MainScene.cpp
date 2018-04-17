@@ -18,8 +18,8 @@ bool MainScene::init() {
 
 	//Background
 	auto Background = Sprite::create(DIR_IMAGES + "Background.png");
-	Background->setScale(VisionSize.width / 1215., VisionSize.height / 717.);
 	Background->setPosition(Vec2(VisionSize.width / 2, VisionSize.height / 2));
+	Background->setContentSize(VisionSize);
 	this->addChild(Background);
 
 	//CharacterButton
@@ -65,5 +65,21 @@ bool MainScene::init() {
 					   return true;
 				   }
 	);
+	ConsoleManager::Get()->
+		AddCommand("/addbtn", 4,
+				   [&](std::vector<std::string> t)->bool {
+					   auto Button = ui::Button::create(DIR_IMAGES + "Button_Normal.png", DIR_IMAGES + "Button_Press.png", DIR_IMAGES + "Button_Disable.png");
+					   Button->setName(t[0]);
+					   Button->setPosition(Vec2(std::stof(t[2]), std::stof(t[3])));
+					   Button->setScale9Enabled(true);
+					   Button->setContentSize(Size(80, 80));
+					   auto ButtonLabel = Label::createWithTTF(t[1], FONTS_MSYH, 32);
+					   ButtonLabel->setColor(Color3B(0, 0, 0));
+					   Button->setTitleLabel(ButtonLabel);
+					   this->addChild(Button);
+					   return true;
+				   }
+	);
+
 	return true;
 }
