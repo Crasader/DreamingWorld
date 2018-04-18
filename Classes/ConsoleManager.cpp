@@ -4,7 +4,6 @@
 
 ConsoleManager::ConsoleManager() {
 	CmdOutput = "DreamingWorld Console";
-	//CmdInput.push_back("");
 	AddCommand("/help", 0,
 			   [&](std::vector<std::string>)->bool {
 				   Print(CommandHelp());

@@ -73,7 +73,7 @@ bool MainScene::init() {
 					   Button->setPosition(Vec2(std::stof(t[2]), std::stof(t[3])));
 					   Button->setScale9Enabled(true);
 					   Button->setContentSize(Size(80, 80));
-					   auto ButtonLabel = Label::createWithTTF(t[1], FONTS_MSYH, 32);
+					   auto ButtonLabel = Label::createWithTTF(t[1], FONTS_KAI, 32);
 					   ButtonLabel->setColor(Color3B(0, 0, 0));
 					   Button->setTitleLabel(ButtonLabel);
 					   this->addChild(Button);

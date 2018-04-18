@@ -105,7 +105,7 @@ bool ConsoleLayer::init() {
 			}
 		}
 	};
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(key, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(key, this->InputTextField);
 
 	//ConsoleManager
 	ConsoleManager::Get()->
