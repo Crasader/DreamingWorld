@@ -1,5 +1,6 @@
 #include"CharacterScene.h"
 #include"Others.h"
+#include"Resource.h"
 #include"ConsoleLayer.h"
 #include<ui/CocosGUI.h>
 

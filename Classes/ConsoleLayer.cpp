@@ -1,6 +1,7 @@
 #include"ConsoleLayer.h"
 #include"ConsoleManager.h"
 #include"Others.h"
+#include"Resource.h"
 
 USING_NS_CC;
 
@@ -8,6 +9,7 @@ bool ConsoleLayer::init() {
 	if(!Layer::init()) {
 		return false;
 	}
+	HisPos = ConsoleManager::Get()->GetInput()->size();
 	auto VisibleSize = Director::getInstance()->getVisibleSize();
 
 	//Background
@@ -60,13 +62,14 @@ bool ConsoleLayer::init() {
 	//KeyboardEvent
 	auto key = EventListenerKeyboard::create();
 	key->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event) {
+		auto Size = ConsoleManager::Get()->GetInput()->size();
 		if(keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
 			if(InputTextField->getString() != "") {
 				ConsoleManager::Get()->Input(InputTextField->getString());
 				InputTextField->setString("");
 				ResetInput();
 				ResetOutput();
-				HisPos = (*(ConsoleManager::Get()->GetInput())).size();
+				HisPos = Size + 1;
 			}
 		}
 		if(keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW) {
@@ -77,11 +80,11 @@ bool ConsoleLayer::init() {
 			if(HisPos < 0) {
 				HisPos = 0;
 			}
-			if(HisPos > (*(ConsoleManager::Get()->GetInput())).size()) {
-				HisPos = (*(ConsoleManager::Get()->GetInput())).size();
+			if(HisPos > Size) {
+				HisPos = Size;
 			}
 
-			if(HisPos == (*(ConsoleManager::Get()->GetInput())).size()) {
+			if(HisPos == Size) {
 				InputTextField->setString("");
 			}
 			else {
@@ -90,14 +93,15 @@ bool ConsoleLayer::init() {
 		}
 		if(keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW) {
 			HisPos++;
+
 			if(HisPos < 0) {
 				HisPos = 0;
 			}
-			if(HisPos > (*(ConsoleManager::Get()->GetInput())).size()) {
-				HisPos = (*(ConsoleManager::Get()->GetInput())).size();
+			if(HisPos > Size) {
+				HisPos = Size;
 			}
 
-			if(HisPos == (*(ConsoleManager::Get()->GetInput())).size()) {
+			if(HisPos == Size) {
 				InputTextField->setString("");
 			}
 			else {

@@ -59,6 +59,9 @@
     <ClInclude Include="..\Classes\ConsoleLayer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Resource.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
