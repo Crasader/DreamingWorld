@@ -12,6 +12,8 @@ bool MainScene::init() {
 	if(!Scene::init()) {
 		return false;
 	}
+	CharWidgetOpened = false;
+
 	auto VisionSize = Director::getInstance()->getVisibleSize();
 
 	//Keyboard
@@ -25,9 +27,18 @@ bool MainScene::init() {
 
 	//CharacterButton
 	this->addChild(CreateDefaultButton("Character", Vec2(664, 62), Size(80, 80),
-				   [](Ref* sender, ui::Widget::TouchEventType type) {
+				   [&](Ref* sender, ui::Widget::TouchEventType type) {
 					   if(type == ui::Widget::TouchEventType::ENDED) {
-						   Director::getInstance()->pushScene(CharacterScene::create());
+						   if(CharWidgetOpened) {
+							   this->removeChildByName("CharWidget");
+						   }
+						   else {
+							   auto ch = CharacterWidget::create();
+							   ch->setPosition(Vec2(224, 102));
+							   ch->setName("CharWidget");
+							   this->addChild(ch);
+						   }
+						   CharWidgetOpened = !CharWidgetOpened;
 					   }
 				   },
 				   u8"人物", FONTS_KAI, 32, Color3B(0, 0, 0))
@@ -52,6 +63,18 @@ bool MainScene::init() {
 				   u8"商店", FONTS_KAI, 32, Color3B(0, 0, 0))
 	);
 
+	//ExitButton
+	this->addChild(CreateDefaultButton("Exit", Vec2(910, 62), Size(80, 80),
+				   [](cocos2d::Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+					   if(type == ui::Widget::TouchEventType::ENDED) {
+						   //TODO: Save
+						   Director::getInstance()->end();
+					   }
+				   },
+				   u8"退出", FONTS_KAI, 32, Color3B(0, 0, 0))
+	);
+
+	//Command
 	ConsoleManager::Get()->
 		AddCommand("/setpos", 3,
 				   [&](std::vector<std::string> t)->bool {

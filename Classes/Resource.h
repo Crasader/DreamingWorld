@@ -3,8 +3,6 @@
 #include<cocos2d.h>
 #include<ui/CocosGUI.h>
 
-//#include<string>
-
 #define DIR_ASSETS std::string("Assets/")
 #define DIR_FONTS DIR_ASSETS + std::string("Fonts/")
 #define DIR_IMAGES DIR_ASSETS + std::string("Images/")

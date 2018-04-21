@@ -11,4 +11,6 @@ public:
 	virtual bool init();
 
 	CONSOLE_KEY_PRE;
+private:
+	bool CharWidgetOpened;
 };
