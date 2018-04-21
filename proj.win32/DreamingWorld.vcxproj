@@ -165,6 +165,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Others.h" />
     <ClInclude Include="..\Classes\ConsoleLayer.h" />
     <ClInclude Include="..\Classes\ConsoleManager.h" />
+    <ClInclude Include="..\Classes\Resource.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
