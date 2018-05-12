@@ -2,6 +2,5 @@
 !/cocos2d/.gitkeep
 
 /proj.win32/Debug.win32/
-/proj.win32/.vs/DreamingWorld/v15/ipch
-/proj.win32/.vs/DreamingWorld/v15/Browse.VC.db
+/proj.win32/.vs/
 /Resources/
