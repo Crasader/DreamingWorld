@@ -69,9 +69,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Classes\JsonCpp\;$(ProjectDir)..\Classes\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Classes\JsonCpp\;$(ProjectDir)..\Classes\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,6 +153,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\CharacterScene.cpp" />
+    <ClCompile Include="..\Classes\Factory.cpp" />
     <ClCompile Include="..\Classes\Game.cpp" />
     <ClCompile Include="..\Classes\GameMode.cpp" />
     <ClCompile Include="..\Classes\GameState.cpp" />
@@ -163,6 +166,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\CharacterScene.h" />
+    <ClInclude Include="..\Classes\Factory.h" />
     <ClInclude Include="..\Classes\Game.h" />
     <ClInclude Include="..\Classes\GameMode.h" />
     <ClInclude Include="..\Classes\GameState.h" />
@@ -179,6 +183,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ProjectReference Include="..\cocos2d\cocos\2d\libcocos2d.vcxproj">
       <Project>{98a51ba8-fc3a-415b-ac8f-8c7bd464e93e}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="JsonCpp\JsonCpp.vcxproj">
+      <Project>{594443cd-9f3e-4839-9de4-77f43ae9bf83}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
